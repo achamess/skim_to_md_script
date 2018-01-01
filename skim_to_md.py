@@ -30,6 +30,7 @@ import subprocess
 import glob
 import jinja2
 import argparse
+import datetime
 
 jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
 
@@ -54,17 +55,26 @@ citekey = args.citekey
 ref = args.ref
 #tags = args.tags
 
+#https://www.saltycrane.com/blog/2008/06/how-to-get-current-date-and-time-in/
+#get current date
+now = datetime.datetime.now()
+date = now.strftime("%Y-%m-%d")
+
+
+
 #the template for output. eventually will be external, but for now, inside the script. 
-template = jinja2.Template("""+++\nTitle: {{ title }}\ntags:\n+++\n
-##Summary:\n\n
-##Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n\n
-**Reference**: {{ ref }}\n\n##Comments:""")
-
-
+template = jinja2.Template("""+++\ntitle = '{{ title }}'\ntags = []\ndate = {{ date }}\n+++\n
+## Summary:\n\n
+## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n\n
+**Reference**: {{ ref }}\n\n## Comments:\n""")
 
 
 
 #%%
+
+''' extract the annotations, highlights, etc. from the PDF using skimnotes. 
+split the global notes stream into individual highlights. 
+'''
 
 #find the pdf
 pdf = glob.glob("*.pdf")
@@ -100,8 +110,9 @@ http://cmdlinetips.com/2012/09/three-ways-to-write-text-to-a-file-in-python/
 i = 1
 for item in notes_split:
     f= open('./%s.md'%("note" + "_" + str(i)),'w')
-    result = template.render(title=title, citekey=citekey, ref=ref, quote = item)
+    result = template.render(title=title, citekey=citekey, ref=ref, quote = item, date=date)
     f.write(result)
+    f.close()
     i = i+1
     
 #%%
