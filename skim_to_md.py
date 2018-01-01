@@ -42,20 +42,20 @@ get arguments from command line to set variables for final output file
 https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-argument-3-results
 '''
 
-#get the variables from the CL
-parser = argparse.ArgumentParser()
-parser.add_argument("title", help="The Title of the Paper")
-parser.add_argument("citekey", help = "citekey")
-parser.add_argument("ref", help= "Full Reference")
-#parser.add_argument("tags", help="Add Tags")
-args = parser.parse_args()
+##get the variables from the CL
+#parser = argparse.ArgumentParser()
+#parser.add_argument("title", help="The Title of the Paper")
+#parser.add_argument("citekey", help = "citekey")
+#parser.add_argument("ref", help= "Full Reference")
+##parser.add_argument("tags", help="Add Tags")
+#args = parser.parse_args()
 
 # set the CL variables 
-title = args.title.strip('\n')
-citekey = args.citekey.strip('\n')
-ref = args.ref.strip('\n')
+title = input("What is the TITLE of the paper? ").strip('\n')
+citekey = input("What is the CITEKEY? ").strip('\n')
+ref = input("What is the full REFERENCE of the paper? ").strip('\n')
+tags = input("Provide a list of tags (optional; comma separated) ").strip('\n')
 #tags = args.tags
-
 
 
 #https://www.saltycrane.com/blog/2008/06/how-to-get-current-date-and-time-in/
