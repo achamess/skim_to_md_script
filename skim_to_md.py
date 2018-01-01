@@ -31,8 +31,9 @@ import glob
 import jinja2
 import argparse
 import datetime
+import os
 
-jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
+#jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
 
 
 #%%
@@ -50,10 +51,12 @@ parser.add_argument("ref", help= "Full Reference")
 args = parser.parse_args()
 
 # set the CL variables 
-title = args.title
-citekey = args.citekey
-ref = args.ref
+title = args.title.strip('\n')
+citekey = args.citekey.strip('\n')
+ref = args.ref.strip('\n')
 #tags = args.tags
+
+
 
 #https://www.saltycrane.com/blog/2008/06/how-to-get-current-date-and-time-in/
 #get current date
@@ -65,8 +68,12 @@ date = now.strftime("%Y-%m-%d")
 #the template for output. eventually will be external, but for now, inside the script. 
 template = jinja2.Template("""+++\ntitle = '{{ title }}'\ntags = []\ndate = {{ date }}\n+++\n
 ## Summary:\n\n
-## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n\n
+## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}
 **Reference**: {{ ref }}\n\n## Comments:\n""")
+
+
+#\n[Link to Source]("{{"< ref '{{ pdf_path }}' >"}}")
+#maybe add later
 
 
 
@@ -79,6 +86,8 @@ split the global notes stream into individual highlights.
 #find the pdf
 pdf = glob.glob("*.pdf")
 pdf = pdf[0].replace('"','')
+pdf_path = os.path.relpath(pdf)
+
 
 # call skimnotes with the pdf file name
 # creates a text file 
@@ -110,7 +119,7 @@ http://cmdlinetips.com/2012/09/three-ways-to-write-text-to-a-file-in-python/
 i = 1
 for item in notes_split:
     f= open('./%s.md'%("note" + "_" + str(i)),'w')
-    result = template.render(title=title, citekey=citekey, ref=ref, quote = item, date=date)
+    result = template.render(title=title, citekey=citekey, ref=ref, quote = item, date=date, pdf_path = pdf_path)
     f.write(result)
     f.close()
     i = i+1
