@@ -24,7 +24,6 @@ Usage:
 import subprocess
 import glob
 import jinja2
-import argparse
 import datetime
 import os
 
