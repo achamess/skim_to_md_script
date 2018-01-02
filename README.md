@@ -4,7 +4,7 @@ This is a script in python that takes highlighted text from a PDF in [Skim.app](
 
 [skim_to_md_v0.1.py](skim_to_md_v0.1.py) = python script  
 
-[skim_to_md_v0.1.sh](skim_to_md_v0.1.py) = interactive shell script 
+[skim_to_md_v0.1.sh](skim_to_md_v0.1.sh) = interactive shell script 
 
 You can use either, but it's probably easiest to use the shell script. 
 
