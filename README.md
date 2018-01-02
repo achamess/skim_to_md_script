@@ -2,6 +2,11 @@
 
 This is a script in python that takes highlighted text from a PDF in [Skim.app]() and produces individual markdown files for each highlight. 
 
+[skim_to_md.py](skim_to_md.py) = python script
+[skim_to_md.sh](skim_to_md.py) = interactive shell script 
+
+You can use either, but it's probably easiest to use the shell script. 
+
 ## What it does
 
 - Export highlights from a PDF annotated in Skim.app
@@ -30,6 +35,7 @@ Anyone who does work wtih texts - academics, journalists, writers, researchers, 
 
 ## Roadmap
 
-- Format notes using a templating engine such as Django or Jinja2
-- Add additional information to the final note, including a bibtex citekey and full reference 
-- Add additional fields in the markdown note for comments, thoughts, and related information.
+- Make more templates that are external to the script
+- Allow for more filtering of the quoted text
+- Integrate tags 
+- 
