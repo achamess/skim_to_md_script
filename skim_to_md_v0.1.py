@@ -14,13 +14,8 @@ Requirements:
 Usage:
 - Create a directory (or use an existing one) where the extracts will go
 - The PDF of interest must be in the same directory as the script.
-- Run the script from the command line using the arguments
+- Run the script from the command line and answer the prompts
 
-python skim_to_md.py ["title"]["citekey"]["ref"]
-
-ref = full reference
-citekey = a citekey in any form (e.g. bibtex, papers3.app)
-title = the full title of the paper
 
 '''
 
@@ -42,15 +37,8 @@ get arguments from command line to set variables for final output file
 https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-argument-3-results
 '''
 
-##get the variables from the CL
-#parser = argparse.ArgumentParser()
-#parser.add_argument("title", help="The Title of the Paper")
-#parser.add_argument("citekey", help = "citekey")
-#parser.add_argument("ref", help= "Full Reference")
-##parser.add_argument("tags", help="Add Tags")
-#args = parser.parse_args()
 
-# set the CL variables 
+# set the input variables
 title = input("What is the TITLE of the paper? ").strip('\n')
 citekey = input("What is the CITEKEY? ").strip('\n')
 ref = input("What is the full REFERENCE of the paper? ").strip('\n')
