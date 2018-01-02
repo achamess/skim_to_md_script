@@ -26,6 +26,8 @@ In addition to the highlighted text, the output files have other fields, includi
 
 These bits of info are usually what one needs to have at hand for producing some kind of writing or scholarly output. Kind of like old school index-cards were used for research once upon a time.
 
+![Demo](skimtomd-demo.gif)
+
 ## Who's it for?
 
 Anyone who does work wtih texts - academics, journalists, writers, researchers, etc.
