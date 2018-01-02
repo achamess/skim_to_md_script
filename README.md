@@ -28,6 +28,19 @@ These bits of info are usually what one needs to have at hand for producing some
 
 ![Demo](skimtomd-demo.gif)
 
+## Usage
+
+From the command line, navigate to the folder that contains the PDF of interest.
+	
+``` bash
+	cd /path/to/folder #where the PDF is
+	sudo chmod u+x skim_to_md_v0.1.sh #make executable
+	skim_to_md_v0.1.sh #run the script
+
+```
+
+Note: If you put the script file in the same folder as the PDF, you don't need to do anything but run it as shown. But if you want to run it from anywhere, modify your `$PATH` to the directory where you keep the `skim_to_md.sh` script. 
+
 ## Who's it for?
 
 Anyone who does work wtih texts - academics, journalists, writers, researchers, etc.
