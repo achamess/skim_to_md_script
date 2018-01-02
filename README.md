@@ -1,9 +1,10 @@
 # skim_to_md
 
-This is a script in python that takes highlighted text from a PDF in [Skim.app]() and produces individual markdown files for each highlight. 
+This is a script in python that takes highlighted text from a PDF in [Skim.app](https://sourceforge.net/projects/skim-app) and produces individual markdown files for each highlight. 
 
-[skim_to_md.py](skim_to_md.py) = python script
-[skim_to_md.sh](skim_to_md.py) = interactive shell script 
+[skim_to_md_v0.1.py](skim_to_md_v0.1.py) = python script  
+
+[skim_to_md_v0.1.sh](skim_to_md_v0.1.py) = interactive shell script 
 
 You can use either, but it's probably easiest to use the shell script. 
 

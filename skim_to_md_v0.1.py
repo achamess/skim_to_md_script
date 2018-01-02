@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 '''
@@ -63,6 +62,7 @@ tags = input("Provide a list of tags (optional; comma separated) ").strip('\n')
 #get current date
 now = datetime.datetime.now()
 date = now.strftime("%Y-%m-%d")
+timestamp = now.strftime("%Y%m%d%H%M%S")
 
 
 
@@ -119,7 +119,7 @@ http://cmdlinetips.com/2012/09/three-ways-to-write-text-to-a-file-in-python/
 
 i = 1
 for item in notes_split:
-    f= open('./%s.md'%("note" + "_" + str(i)),'w')
+    f= open('./%s.md'%(str(timestamp) + "." + str(i)),'w')
     result = template.render(title=title, citekey=citekey, ref=ref, quote = item, date=date, pdf_path = pdf_path)
     f.write(result)
     f.close()
