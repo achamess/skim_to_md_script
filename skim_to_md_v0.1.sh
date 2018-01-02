@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/Users/alex/anaconda/bin/python
 # -*- coding: utf-8 -*-
 
 '''
