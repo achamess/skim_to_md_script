@@ -2,9 +2,7 @@
 
 This is a script in python that takes highlighted text from a PDF in [Skim.app](https://sourceforge.net/projects/skim-app) and produces individual markdown files for each highlight. 
 
-[skim_to_md_v0.1.py](skim_to_md_v0.1.py) = python script  
-
-[skim_to_md_v0.1.sh](skim_to_md_v0.1.sh) = interactive shell script 
+[Current release](https://github.com/achamess/skim_to_md_script/releases)
 
 You can use either, but it's probably easiest to use the shell script. 
 
@@ -34,8 +32,8 @@ From the command line, navigate to the folder that contains the PDF of interest.
 	
 ``` bash
 	cd /path/to/folder #where the PDF is
-	sudo chmod u+x skim_to_md_v0.1.sh #make executable
-	skim_to_md_v0.1.sh #run the script
+	sudo chmod u+x skim_to_md.sh #make executable
+	skim_to_md.sh #run the script
 
 ```
 
@@ -54,4 +52,3 @@ Anyone who does work wtih texts - academics, journalists, writers, researchers, 
 - Make more templates that are external to the script
 - Allow for more filtering of the quoted text
 - Integrate tags 
-- 
