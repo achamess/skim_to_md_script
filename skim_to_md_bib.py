@@ -26,8 +26,7 @@ import glob
 import jinja2
 import datetime
 import os
-import re
-import itertools
+import bibtexparser #https://bibtexparser.readthedocs.io/en/v0.6.2/index.html
 
 #jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
 
@@ -38,15 +37,20 @@ get arguments from command line to set variables for final output file
 https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-argument-3-results
 '''
 
+with open('arcourt-refs.bib') as bibtex_file:
+    bibtex_str = bibtex_file.read()
+bib_database = bibtexparser.loads(bibtex_str)
+
+
 # set the input variables
-#title = input("What is the TITLE of the paper? ").strip('\n')
+title = input("What is the TITLE of the paper? ").strip('\n')
 citekey = input("What is the CITEKEY? ").strip('\n')
 ref = input("What is the full REFERENCE of the paper? ").strip('\n')
 tags = input("Provide a list of tags (optional; comma separated) ").strip('\n')
 #modify tags -> separate each tag, put in double quotes, and separate by commas
 #https://stackoverflow.com/questions/32765735/python-enclose-each-word-of-a-space-separated-string-in-quotes
-tags= ' '.join('"#{}",'.format(word) for word in tags.split(',')).rstrip(',')
-
+tags= ' '.join('"#{}",'.format(word) for word in tags.split(',')).rstrip(',') 
+title                
 #tags = args.tags
 
 
@@ -59,8 +63,8 @@ timestamp = now.strftime("%Y%m%d%H%M%S")
 
 
 #the template for output. eventually will be external, but for now, inside the script. 
-template = jinja2.Template("""+++\ntitle = '{{ summary }}'\ntags = [{{ tags }}]\ndate = {{ date }}\n+++\n
-## Summary:\n {{ summary }}\n\n
+template = jinja2.Template("""+++\ntitle = '{{ title }}'\ntags = [{{ tags }}]\ndate = {{ date }}\n+++\n
+## Summary:\n\n
 ## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}
 **Reference**: {{ ref }}\n\n## Comments:\n""")
 
@@ -99,25 +103,6 @@ notes=notes.decode("utf-8")
 #http://www.pythonforbeginners.com/dictionary/python-split
 notes_split = notes.split("\n\n")
 
-#%%
-#cleanup notes
-#remove split page hyphens
-#remove "Highlight"
-# remove "Anchored Note"
-
-for i in range(len(notes_split)):
-    note = notes_split[i]
-    note = re.sub("\-\s","",note) #remove split page hyphens
-    note = re.sub("\* Highlight, page \d+\n","", note)
-    note = re.sub("\* Anchored Note, page \d+\n","", note)
-    notes_split[i] = note
-   #note_hyphens = re.sub("(\w)\-\s(\w)","\1\2",note)
-    #print(note_hyphens)
-    #note_hyphens = re.sub("+-\s+")
-
-#turn summaries and quotes into pairs in a dictionary
-#https://stackoverflow.com/questions/4576115/convert-a-list-to-a-dictionary-in-python
-note_dict = dict(zip(notes_split[::2], notes_split[1::2]))
 
 
 
@@ -128,34 +113,13 @@ http://itsaboutcs.blogspot.com/2015/02/renaming-files-in-directory-in.html
 http://cmdlinetips.com/2012/09/three-ways-to-write-text-to-a-file-in-python/
 '''
 
-#i = 1
-#for item in notes_split:
-#   f= open('./%s.md'%(str(timestamp) + "." + str(i)),'w')
-#    result = template.render(title=title, citekey=citekey, ref=ref, quote = item, date=date, pdf_path = pdf_path,
-#    tags=tags)
-#    f.write(result)
-#    f.close()
-#    i = i+1
-#    
-
-#check files in directory
-#turn summary one-liner into file title and fill with paired quoted text
-# checks to see if file already exists based on file name (summary one liner needed for ID)  
-#  how to check the file names <- https://stackoverflow.com/questions/4843158/check-if-a-python-list-item-contains-a-string-inside-another-string
-
-
-files = [f for f in os.listdir('.') if os.path.isfile(f)]  
 i = 1
-for key, value in note_dict.items():
-    summary = str(key)
-    result = template.render(citekey=citekey, ref=ref, quote = value, date=date, summary = summary, pdf_path = pdf_path,
+for item in notes_split:
+    f= open('./%s.md'%(str(timestamp) + "." + str(i)),'w')
+    result = template.render(title=title, citekey=citekey, ref=ref, quote = item, date=date, pdf_path = pdf_path,
     tags=tags)
-    fn = '%s.md'%(str(timestamp) + "." + str(i) + " " + str(key))
-    if any(str(key) in file_name for file_name in files): 
-        pass
-    else:
-        f = open(fn,'w')
-        f.write(result)
-        f.close()
-    i = i+1    
+    f.write(result)
+    f.close()
+    i = i+1
+    
 #%%
