@@ -16,6 +16,11 @@ Usage:
 - The PDF of interest must be in the same directory as the script.
 - Run the script from the command line and answer the prompts
 
+Note on PDF annotation:
+    This script expects that highlighted text comes with summary notes. The summary note
+    is used to name the file. So in addition to highlighting a text block, you need to 
+    also make an anchored note in Skim and position it to immediately precede a highlight. 
+
 
 '''
 
@@ -27,7 +32,7 @@ import jinja2
 import datetime
 import os
 import re
-import itertools
+
 
 #jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
 
@@ -45,7 +50,11 @@ ref = input("What is the full REFERENCE of the paper? ").strip('\n')
 tags = input("Provide a list of tags (optional; comma separated) ").strip('\n')
 #modify tags -> separate each tag, put in double quotes, and separate by commas
 #https://stackoverflow.com/questions/32765735/python-enclose-each-word-of-a-space-separated-string-in-quotes
-tags= ' '.join('"#{}",'.format(word) for word in tags.split(',')).rstrip(',')
+# set tags. if empty, do nothing, else, fill with tags given by user
+if tags == "":
+    pass
+else:
+    tags= ' '.join('"#{}",'.format(word) for word in tags.split(',')).rstrip(',')
 
 #tags = args.tags
 
@@ -59,10 +68,9 @@ timestamp = now.strftime("%Y%m%d%H%M%S")
 
 
 #the template for output. eventually will be external, but for now, inside the script. 
-template = jinja2.Template("""+++\ntitle = '{{ summary }}'\ntags = [{{ tags }}]\ndate = {{ date }}\n+++\n
+template = jinja2.Template("""+++\ntitle = '{{ note_id }}'\ntags = [{{ tags }}]\ndate = {{ date }}\n+++\n
 ## Summary:\n {{ summary }}\n\n
-## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}
-**Reference**: {{ ref }}\n\n## Comments:\n""")
+## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n**Reference**: {{ ref }}\n\n## Comments:\n""")
 
 
 #\n[Link to Source]("{{"< ref '{{ pdf_path }}' >"}}")
@@ -147,10 +155,12 @@ http://cmdlinetips.com/2012/09/three-ways-to-write-text-to-a-file-in-python/
 files = [f for f in os.listdir('.') if os.path.isfile(f)]  
 i = 1
 for key, value in note_dict.items():
+    note_id = str(str(timestamp) + "." + str(i) + " " + str(key))
+    fn = '%s.md'%(note_id)
     summary = str(key)
-    result = template.render(citekey=citekey, ref=ref, quote = value, date=date, summary = summary, pdf_path = pdf_path,
+    result = template.render(note_id=note_id, citekey=citekey, ref=ref, quote = value, date=date, summary = summary, pdf_path = pdf_path,
     tags=tags)
-    fn = '%s.md'%(str(timestamp) + "." + str(i) + " " + str(key))
+    
     if any(str(key) in file_name for file_name in files): 
         pass
     else:
