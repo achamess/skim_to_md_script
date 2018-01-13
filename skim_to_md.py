@@ -32,6 +32,7 @@ import jinja2
 import datetime
 import os
 import re
+import bibtexparser #https://bibtexparser.readthedocs.io/en/v0.6.2/index.html
 
 
 #jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
@@ -42,11 +43,31 @@ import re
 get arguments from command line to set variables for final output file
 https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-argument-3-results
 '''
+# User needs to set path to bibliography (.bib) file
+path_to_bibliography = "/Users/alex/Dropbox/Papers3_Citations/Bibliography-Master.bib"
+
+#get bibliography 
+with open(path_to_bibliography) as bibtex_file:
+    bibtex_str = bibtex_file.read()
+bib_database = bibtexparser.loads(bibtex_str)
+
+dicts = bib_database.entries
+      
+for item in dicts[0:5]:
+      if 'dec' in item['month']:
+          print (item)
+      
+
+
+
+#item for item in bib.database.entries if 'Mogil' in item['author']
+
 
 # set the input variables
 #title = input("What is the TITLE of the paper? ").strip('\n')
 citekey = input("What is the CITEKEY? ").strip('\n')
 ref = input("What is the full REFERENCE of the paper? ").strip('\n')
+summary = input("Does your PDF have summary notes? ").strip('\n')
 tags = input("Provide a list of tags (optional; comma separated) ").strip('\n')
 #modify tags -> separate each tag, put in double quotes, and separate by commas
 #https://stackoverflow.com/questions/32765735/python-enclose-each-word-of-a-space-separated-string-in-quotes
