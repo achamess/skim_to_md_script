@@ -1,3 +1,4 @@
+#! /Users/alex/anaconda/bin/python
 # -*- coding: utf-8 -*-
 
 '''
@@ -26,6 +27,7 @@ Note on PDF annotation:
 
 #%%
 #import modules
+import sys
 import subprocess
 import glob
 import jinja2
@@ -33,6 +35,7 @@ import datetime
 import os
 import re
 import bibtexparser #https://bibtexparser.readthedocs.io/en/v0.6.2/index.html
+import argparse 
 
 
 #jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
@@ -43,32 +46,13 @@ import bibtexparser #https://bibtexparser.readthedocs.io/en/v0.6.2/index.html
 get arguments from command line to set variables for final output file
 https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-argument-3-results
 '''
-# User needs to set path to bibliography (.bib) file
-path_to_bibliography = "/Users/alex/Dropbox/Papers3_Citations/Bibliography-Master.bib"
+parser = argparse.ArgumentParser()
+parser.add_argument("tags", help="Add your tags here")
+args = args = parser.parse_args()
+tags = args.tags
+print (tags)
 
-#get bibliography 
-with open(path_to_bibliography) as bibtex_file:
-    bibtex_str = bibtex_file.read()
-bib_database = bibtexparser.loads(bibtex_str)
-
-dicts = bib_database.entries
-      
-for item in dicts[0:5]:
-      if 'dec' in item['month']:
-          print (item)
-      
-
-
-
-#item for item in bib.database.entries if 'Mogil' in item['author']
-
-
-# set the input variables
-#title = input("What is the TITLE of the paper? ").strip('\n')
-citekey = input("What is the CITEKEY? ").strip('\n')
-ref = input("What is the full REFERENCE of the paper? ").strip('\n')
-summary = input("Does your PDF have summary notes? ").strip('\n')
-tags = input("Provide a list of tags (optional; comma separated) ").strip('\n')
+#tags = input("Provide a list of tags (optional; comma separated) ").strip('\n')
 #modify tags -> separate each tag, put in double quotes, and separate by commas
 #https://stackoverflow.com/questions/32765735/python-enclose-each-word-of-a-space-separated-string-in-quotes
 # set tags. if empty, do nothing, else, fill with tags given by user
@@ -77,8 +61,41 @@ if tags == "":
 else:
     tags= ' '.join('"#{}",'.format(word) for word in tags.split(',')).rstrip(',')
 
-#tags = args.tags
 
+# User needs to set path to bibliography (.bib) file
+path_to_bibliography = "/Users/alex/Dropbox/Papers3_Citations/Bibliography-Master.bib"
+path_to_zk = "/Users/alex/Dropbox/Sublime_Zettel/Paper_Notes/"
+
+#get bibliography 
+with open(path_to_bibliography) as bibtex_file:
+    bibtex_str = bibtex_file.read()
+bib_database = bibtexparser.loads(bibtex_str)
+dicts = bib_database.entries
+     
+#%% 
+#get path to current PDF opened in Skim
+pdf_path = subprocess.Popen("osascript skim_current_page.scpt",stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8").strip('\n')
+
+#get the bibtex record of the current pdf
+for item in dicts:
+    if (item.get("file") is not None) and pdf_path in item.get("file"):
+        record = item
+        print(item.get('title'))
+        print("[@"+item.get('ID')+"]")
+    else:
+        pass
+
+
+#%% Get information about paper from Bibtex record
+
+# set the input variables
+#title = ref.get('title')
+citekey = "[@"+record.get('ID')+"]"    
+# formatted reference for note 
+author_short= record.get('author').split(',',1)[0]
+ref =author_short + " " "*et al.*" + " " + "(" + record.get('year') + ")"+"."\
++ " " + record.get('title') + "." + " " + record.get('journal') + " " + \
+"*"+ record.get('volume') + "*" + "," + " " + str(record.get('pages'))
 
 #https://www.saltycrane.com/blog/2008/06/how-to-get-current-date-and-time-in/
 #get current date
@@ -86,12 +103,22 @@ now = datetime.datetime.now()
 date = now.strftime("%Y-%m-%d")
 timestamp = now.strftime("%Y%m%d%H%M%S")
 
+#make a folder for the notes if it doesn't exist
+#https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format
+directory = path_to_zk + os.path.basename(pdf_path).replace(".pdf","")
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
+
+#%%
 
 
 #the template for output. eventually will be external, but for now, inside the script. 
 template = jinja2.Template("""+++\ntitle = '{{ note_id }}'\ntags = [{{ tags }}]\ndate = {{ date }}\n+++\n
 ## Summary:\n {{ summary }}\n\n
-## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n**Reference**: {{ ref }}\n\n## Comments:\n""")
+## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n**Reference**: {{ ref }}\n\n
+[Link to PDF]({{ pdf_path }})\n\n
+## Comments:\n""")
 
 
 #\n[Link to Source]("{{"< ref '{{ pdf_path }}' >"}}")
@@ -105,24 +132,11 @@ template = jinja2.Template("""+++\ntitle = '{{ note_id }}'\ntags = [{{ tags }}]\
 split the global notes stream into individual highlights. 
 '''
 
-#find the pdf
-pdf = glob.glob("*.pdf")
-pdf = pdf[0].replace('"','')
-pdf_path = os.path.relpath(pdf)
-
-
 # call skimnotes with the pdf file name
 # creates a text file 
-notes = subprocess.Popen("skimnotes get -format text {} -".format(pdf), 
-              stdout=subprocess.PIPE, shell=True).stdout.read()
-
-
-'''
-turn byte object into string
-https://stackoverflow.com/questions/606191/convert-bytes-to-a-string
-'''
-
-notes=notes.decode("utf-8")
+#turn byte object into string
+#https://stackoverflow.com/questions/606191/convert-bytes-to-a-string
+notes = subprocess.Popen("skimnotes get -format text {} -".format(pdf_path),stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8")
 
 #split by double line break
 #http://www.pythonforbeginners.com/dictionary/python-split
@@ -173,15 +187,16 @@ http://cmdlinetips.com/2012/09/three-ways-to-write-text-to-a-file-in-python/
 #  how to check the file names <- https://stackoverflow.com/questions/4843158/check-if-a-python-list-item-contains-a-string-inside-another-string
 
 
-files = [f for f in os.listdir('.') if os.path.isfile(f)]  
+files = [f for f in os.listdir(directory) if os.path.isfile(f)]  
+print (files)
 i = 1
 for key, value in note_dict.items():
     note_id = str(str(timestamp) + "." + str(i) + " " + str(key))
-    fn = '%s.md'%(note_id)
+    fn = (os.path.join(directory,'%s.md'%(note_id)))
+    print(fn)
     summary = str(key)
-    result = template.render(note_id=note_id, citekey=citekey, ref=ref, quote = value, date=date, summary = summary, pdf_path = pdf_path,
-    tags=tags)
-    
+    result = template.render(note_id=note_id, citekey=citekey, ref=ref,\
+    quote = value, date=date, summary = summary,pdf_path = pdf_path,tags=tags)
     if any(str(key) in file_name for file_name in files): 
         pass
     else:
