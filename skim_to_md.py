@@ -5,17 +5,18 @@
 This is a Python script that takes a PDF annotated in Skim.app and produces individual markdown (.md)
 files for each annotation individually. 
 
-Input: A PDF File highlighted/annotated in Skim.app
+Input: A PDF File highlighted/annotated in Skim.app and contained in Papers3
 Output: Individual .md files for each highlight
 
 Requirements:
 - skimnotes (https://sourceforge.net/projects/skim-app/files/SkimNotes%20framework%20and%20tool/)
 - Python 3
+- Papers3
+- Skim.app
 
 Usage:
-- Create a directory (or use an existing one) where the extracts will go
-- The PDF of interest must be in the same directory as the script.
-- Run the script from the command line and answer the prompts
+- Select the paper in Papers3.app and make the current open window
+- Run the script. 
 
 Note on PDF annotation:
     This script expects that highlighted text comes with summary notes. The summary note
@@ -26,17 +27,14 @@ Note on PDF annotation:
 '''
 
 #%%
-#import modules
-import sys
+
 import subprocess
-import glob
 import jinja2
 import datetime
 import os
 import re
 import bibtexparser #https://bibtexparser.readthedocs.io/en/v0.6.2/index.html
 import argparse 
-
 
 #jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
 
@@ -52,10 +50,10 @@ args = args = parser.parse_args()
 tags = args.tags
 print (tags)
 
-#tags = input("Provide a list of tags (optional; comma separated) ").strip('\n')
 #modify tags -> separate each tag, put in double quotes, and separate by commas
 #https://stackoverflow.com/questions/32765735/python-enclose-each-word-of-a-space-separated-string-in-quotes
-# set tags. if empty, do nothing, else, fill with tags given by user
+#set tags. if empty, do nothing, else, fill with tags given by user
+
 if tags == "":
     pass
 else:
@@ -66,36 +64,25 @@ else:
 path_to_bibliography = "/Users/alex/Dropbox/Papers3_Citations/Bibliography-Master.bib"
 path_to_zk = "/Users/alex/Dropbox/Sublime_Zettel/Paper_Notes/"
 
-#get bibliography 
-with open(path_to_bibliography) as bibtex_file:
-    bibtex_str = bibtex_file.read()
-bib_database = bibtexparser.loads(bibtex_str)
-dicts = bib_database.entries
-     
+    
 #%% 
 #get path to current PDF opened in Skim
-pdf_path = subprocess.Popen("osascript skim_current_page.scpt",stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8").strip('\n')
-
-#get the bibtex record of the current pdf
-for item in dicts:
-    if (item.get("file") is not None) and pdf_path in item.get("file"):
-        record = item
-        print(item.get('title'))
-        print("[@"+item.get('ID')+"]")
-    else:
-        pass
-
+paper_info = subprocess.Popen("get_paper.sh",stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8").strip('\n')
+pdf_path = paper_info.split("+")[0].strip(' ')
+bibtex_str = paper_info.split("+")[1]
+ref = paper_info.split("+")[2].strip('\n')
+citekey = "[@"+(paper_info.split("+")[3].strip('\n'))+"]"
 
 #%% Get information about paper from Bibtex record
 
-# set the input variables
-#title = ref.get('title')
-citekey = "[@"+record.get('ID')+"]"    
-# formatted reference for note 
-author_short= record.get('author').split(',',1)[0]
-ref =author_short + " " "*et al.*" + " " + "(" + record.get('year') + ")"+"."\
-+ " " + record.get('title') + "." + " " + record.get('journal') + " " + \
-"*"+ record.get('volume') + "*" + "," + " " + str(record.get('pages'))
+#parse bibtex record 
+
+#bib_database = bibtexparser.loads(bibtex_str)
+#record = bib_database.entries[0]
+
+#ref =author_short + " " "*et al.*" + " " + "(" + record.get('year') + ")"+"."\
+#+ " " + record.get('title') + "." + " " + record.get('journal') + " " + \
+#"*"+ record.get('volume') + "*" + "," + " " + str(record.get('pages'))
 
 #https://www.saltycrane.com/blog/2008/06/how-to-get-current-date-and-time-in/
 #get current date
@@ -105,7 +92,7 @@ timestamp = now.strftime("%Y%m%d%H%M%S")
 
 #make a folder for the notes if it doesn't exist
 #https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format
-directory = path_to_zk + os.path.basename(pdf_path).replace(".pdf","")
+directory = path_to_zk + os.path.basename(pdf_path).replace(".pdf","").rstrip('\n')
 if not os.path.exists(directory):
     os.makedirs(directory)
 
@@ -187,8 +174,8 @@ http://cmdlinetips.com/2012/09/three-ways-to-write-text-to-a-file-in-python/
 #  how to check the file names <- https://stackoverflow.com/questions/4843158/check-if-a-python-list-item-contains-a-string-inside-another-string
 
 
-files = [f for f in os.listdir(directory) if os.path.isfile(f)]  
-print (files)
+files = [f for f in os.listdir(directory)]  
+print(files)
 i = 1
 for key, value in note_dict.items():
     note_id = str(str(timestamp) + "." + str(i) + " " + str(key))

@@ -16,7 +16,6 @@ Usage:
 - The PDF of interest must be in the same directory as the script.
 - Run the script from the command line and answer the prompts
 
-
 '''
 
 #%%
@@ -60,6 +59,8 @@ now = datetime.datetime.now()
 date = now.strftime("%Y-%m-%d")
 timestamp = now.strftime("%Y%m%d%H%M%S")
 
+def new_function(x,y):
+	print (x,y)
 
 
 #the template for output. eventually will be external, but for now, inside the script. 
