@@ -40,7 +40,7 @@ You must change this variable to the full path to wherever you want your notes t
 	cd /path/to/skim_to_md_folder
 	sudo chmod u+x skim_to_md.sh #make executable
 	sudo chmod u+x get_paper.sh
-	skim_to_md.sh [tag1,tag2,tag3 - optional] #run the script
+	skim_to_md.sh [tag1,tag2,tag3] #run the script #tags are required right now. Use "" for no tag.
 
 ```
 
