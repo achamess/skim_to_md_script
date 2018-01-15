@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jan  7 15:32:00 2018
+
+@author: alex
+"""
+
+import bibtexparser
+
+with open('arcourt-refs.bib') as bibtex_file:
+    bibtex_str = bibtex_file.read()
+
+bib_database = bibtexparser.loads(bibtex_str)
+print(bib_database.entries)
