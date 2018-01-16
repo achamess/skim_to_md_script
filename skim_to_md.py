@@ -35,6 +35,7 @@ import os
 import re
 import bibtexparser #https://bibtexparser.readthedocs.io/en/v0.6.2/index.html
 import argparse 
+import base_template.py 
 
 #jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
 
@@ -57,7 +58,7 @@ print (tags)
 if tags == "":
     pass
 else:
-    tags= ' '.join('"#{}",'.format(word) for word in tags.split(',')).rstrip(',')
+    tags= ' '.join('#{}'.format(word) for word in tags.split(',')).rstrip(',')
 
 
 # User needs to set path to bibliography (.bib) file
