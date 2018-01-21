@@ -35,7 +35,7 @@ import os
 import re
 import bibtexparser #https://bibtexparser.readthedocs.io/en/v0.6.2/index.html
 import argparse 
-import base_template.py 
+
 
 #jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
 
@@ -47,6 +47,7 @@ https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-arg
 '''
 parser = argparse.ArgumentParser()
 parser.add_argument("tags", help="Add your tags here")
+parser.add_argument
 args = args = parser.parse_args()
 tags = args.tags
 print (tags)
@@ -65,7 +66,25 @@ else:
 path_to_bibliography = "/Users/alex/Dropbox/Papers3_Citations/Bibliography-Master.bib"
 path_to_zk = "/Users/alex/Dropbox/Sublime_Zettel/Paper_Notes/"
 
-    
+
+#get pdf path from skim 
+get_path_skim = '''
+tell application "Skim"
+	set props to properties of document 1
+	set pathToFile to path of props
+	get pathToFile
+end tell
+'''
+
+p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+stdout, stderr = p.communicate(get_path_skim)
+
+print (stdout)
+
+
+
+if [option]:
+c
 #%% 
 #get path to current PDF opened in Skim
 paper_info = subprocess.Popen("get_paper.sh",stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8").strip('\n')
@@ -73,6 +92,9 @@ pdf_path = paper_info.split("+")[0].strip(' ')
 bibtex_str = paper_info.split("+")[1]
 ref = paper_info.split("+")[2].strip('\n')
 citekey = "[@"+(paper_info.split("+")[3].strip('\n'))+"]"
+
+else: 
+pdf_path = 
 
 #%% Get information about paper from Bibtex record
 
@@ -102,7 +124,9 @@ if not os.path.exists(directory):
 
 
 #the template for output. eventually will be external, but for now, inside the script. 
-template = jinja2.Template("""+++\ntitle = '{{ note_id }}'\ntags = [{{ tags }}]\ndate = {{ date }}\n+++\n
+
+
+template = jinja2.Template("""---\ntitle: {{ note_id }}\ntags: {{ tags }}\ndate: {{ date }}\n---\n# {{ note_id }}\n\n
 ## Summary:\n {{ summary }}\n\n
 ## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n**Reference**: {{ ref }}\n\n
 [Link to PDF]({{ pdf_path }})\n\n
@@ -179,7 +203,9 @@ files = [f for f in os.listdir(directory)]
 print(files)
 i = 1
 for key, value in note_dict.items():
-    note_id = str(str(timestamp) + "." + str(i) + " " + str(key))
+    uid = str(str(timestamp) + "." + str(i))
+    note_id = str(uid + " " + str(key))
+    #note_id = str(str(timestamp) + "." + str(i) + " " + str(key))
     fn = (os.path.join(directory,'%s.md'%(note_id)))
     print(fn)
     summary = str(key)
@@ -193,3 +219,6 @@ for key, value in note_dict.items():
         f.close()
     i = i+1    
 #%%
+
+#%%
+subprocess.Popen(['open', directory])

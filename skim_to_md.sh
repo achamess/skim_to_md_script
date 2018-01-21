@@ -36,6 +36,7 @@ import re
 import bibtexparser #https://bibtexparser.readthedocs.io/en/v0.6.2/index.html
 import argparse 
 
+
 #jinja2.Environment(trim_blocks=True, lstrip_blocks=True)
 
 
@@ -57,7 +58,7 @@ print (tags)
 if tags == "":
     pass
 else:
-    tags= ' '.join('"#{}",'.format(word) for word in tags.split(',')).rstrip(',')
+    tags= ' '.join('#{}'.format(word) for word in tags.split(',')).rstrip(',')
 
 
 # User needs to set path to bibliography (.bib) file
@@ -101,7 +102,9 @@ if not os.path.exists(directory):
 
 
 #the template for output. eventually will be external, but for now, inside the script. 
-template = jinja2.Template("""+++\ntitle = '{{ note_id }}'\ntags = [{{ tags }}]\ndate = {{ date }}\n+++\n
+
+
+template = jinja2.Template("""---\ntitle: {{ note_id }}\ntags: {{ tags }}\ndate: {{ date }}\n---\n# {{ note_id }}\n\n
 ## Summary:\n {{ summary }}\n\n
 ## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n**Reference**: {{ ref }}\n\n
 [Link to PDF]({{ pdf_path }})\n\n
@@ -178,7 +181,9 @@ files = [f for f in os.listdir(directory)]
 print(files)
 i = 1
 for key, value in note_dict.items():
-    note_id = str(str(timestamp) + "." + str(i) + " " + str(key))
+    uid = str(str(timestamp) + "." + str(i))
+    note_id = str(uid + " " + str(key))
+    #note_id = str(str(timestamp) + "." + str(i) + " " + str(key))
     fn = (os.path.join(directory,'%s.md'%(note_id)))
     print(fn)
     summary = str(key)
@@ -192,3 +197,6 @@ for key, value in note_dict.items():
         f.close()
     i = i+1    
 #%%
+
+#%%
+subprocess.Popen(['open', directory])
