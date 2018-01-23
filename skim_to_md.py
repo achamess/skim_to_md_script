@@ -126,7 +126,7 @@ if not os.path.exists(directory):
 #the template for output. eventually will be external, but for now, inside the script. 
 
 
-template = jinja2.Template("""---\ntitle: {{ note_id }}\ntags: {{ tags }}\ndate: {{ date }}\n---\n# {{ note_id }}\n\n
+template = jinja2.Template("""---\nuid: {{ uid }}\ntitle: {{ note_id }}\ntags: {{ tags }}\n---\n# {{ note_id }}\n\n
 ## Summary:\n {{ summary }}\n\n
 ## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n**Reference**: {{ ref }}\n\n
 [Link to PDF]({{ pdf_path }})\n\n
@@ -205,12 +205,11 @@ i = 1
 for key, value in note_dict.items():
     uid = str(str(timestamp) + "." + str(i))
     note_id = str(uid + " " + str(key))
-    #note_id = str(str(timestamp) + "." + str(i) + " " + str(key))
     fn = (os.path.join(directory,'%s.md'%(note_id)))
     print(fn)
     summary = str(key)
     result = template.render(note_id=note_id, citekey=citekey, ref=ref,\
-    quote = value, date=date, summary = summary,pdf_path = pdf_path,tags=tags)
+    quote = value, date=date, summary = summary,pdf_path = pdf_path,tags=tags,uid=uid)
     if any(str(key) in file_name for file_name in files): 
         pass
     else:

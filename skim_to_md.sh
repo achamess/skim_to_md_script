@@ -47,6 +47,7 @@ https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-arg
 '''
 parser = argparse.ArgumentParser()
 parser.add_argument("tags", help="Add your tags here")
+parser.add_argument
 args = args = parser.parse_args()
 tags = args.tags
 print (tags)
@@ -65,7 +66,22 @@ else:
 path_to_bibliography = "/Users/alex/Dropbox/Papers3_Citations/Bibliography-Master.bib"
 path_to_zk = "/Users/alex/Dropbox/Sublime_Zettel/Paper_Notes/"
 
-    
+
+#get pdf path from skim 
+get_path_skim = '''
+tell application "Skim"
+	set props to properties of document 1
+	set pathToFile to path of props
+	get pathToFile
+end tell
+'''
+
+p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+stdout, stderr = p.communicate(get_path_skim)
+
+print (stdout)
+
+
 #%% 
 #get path to current PDF opened in Skim
 paper_info = subprocess.Popen("get_paper.sh",stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8").strip('\n')
@@ -73,6 +89,7 @@ pdf_path = paper_info.split("+")[0].strip(' ')
 bibtex_str = paper_info.split("+")[1]
 ref = paper_info.split("+")[2].strip('\n')
 citekey = "[@"+(paper_info.split("+")[3].strip('\n'))+"]"
+
 
 #%% Get information about paper from Bibtex record
 
@@ -104,7 +121,7 @@ if not os.path.exists(directory):
 #the template for output. eventually will be external, but for now, inside the script. 
 
 
-template = jinja2.Template("""---\ntitle: {{ note_id }}\ntags: {{ tags }}\ndate: {{ date }}\n---\n# {{ note_id }}\n\n
+template = jinja2.Template("""---\nuid: {{ uid }}\ntitle: {{ note_id }}\ntags: {{ tags }}\n---\n# {{ note_id }}\n\n
 ## Summary:\n {{ summary }}\n\n
 ## Quote:\n>{{ quote }}\n\n**Citekey**: {{citekey}}\n**Reference**: {{ ref }}\n\n
 [Link to PDF]({{ pdf_path }})\n\n
@@ -183,12 +200,11 @@ i = 1
 for key, value in note_dict.items():
     uid = str(str(timestamp) + "." + str(i))
     note_id = str(uid + " " + str(key))
-    #note_id = str(str(timestamp) + "." + str(i) + " " + str(key))
     fn = (os.path.join(directory,'%s.md'%(note_id)))
     print(fn)
     summary = str(key)
     result = template.render(note_id=note_id, citekey=citekey, ref=ref,\
-    quote = value, date=date, summary = summary,pdf_path = pdf_path,tags=tags)
+    quote = value, date=date, summary = summary,pdf_path = pdf_path,tags=tags,uid=uid)
     if any(str(key) in file_name for file_name in files): 
         pass
     else:
