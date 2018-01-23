@@ -82,9 +82,6 @@ stdout, stderr = p.communicate(get_path_skim)
 print (stdout)
 
 
-
-if [option]:
-c
 #%% 
 #get path to current PDF opened in Skim
 paper_info = subprocess.Popen("get_paper.sh",stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8").strip('\n')
@@ -93,8 +90,6 @@ bibtex_str = paper_info.split("+")[1]
 ref = paper_info.split("+")[2].strip('\n')
 citekey = "[@"+(paper_info.split("+")[3].strip('\n'))+"]"
 
-else: 
-pdf_path = 
 
 #%% Get information about paper from Bibtex record
 
