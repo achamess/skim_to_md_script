@@ -14,10 +14,14 @@ tell application "Papers"
 		set BibString to bibtex string of p
 		set FullRef to formatted reference of p
 		set ck to citekey of p
-		set output to pathToFile & " + " & BibString & "+" & FullRef & "+" & ck
+		set output to pathToFile & "$#*" & BibString & "$#*" & FullRef & "$#*" & ck 
 	else
 		display dialog "This paper is not in your library"
 	end if
-	
 end tell
 
+
+(*
+
+#I used this funky symbol set to separate because its unlikely to be found in any metadata from papers three
+*)
