@@ -158,7 +158,7 @@ for i in range(len(notes_split)):
     note = notes_split[i]
     note = re.sub("\-\s","",note) #remove split page hyphens
     note = re.sub("\* Highlight, page \d+\n","", note)
-    note = re.sub("\* Anchored Note, page \d+\n","", note)
+    note = re.sub("\* Anchored Note, page.*\n","", note)
     notes_split[i] = note
    #note_hyphens = re.sub("(\w)\-\s(\w)","\1\2",note)
     #print(note_hyphens)
