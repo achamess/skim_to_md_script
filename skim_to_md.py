@@ -65,30 +65,30 @@ tell application "Skim"
 	get pathToFile
 end tell
 '''
-
+tags = "#neuro"
 #%% Get command line arguments
-
-'''
-get arguments from command line to set variables for final output file
-https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-argument-3-results
-'''
-parser = argparse.ArgumentParser()
-parser.add_argument('-t', help= "Tags (comma separated)")
-parser.add_argument('-s', help= "Summary notes (paired)?", action='store_true')
-parser.add_argument('-p', help= "Does this paper have a listing in Papers3?", action='store_true', required = True)
-
-args = args = parser.parse_args()
-tags = args.t
-print (tags)
-
-#modify tags -> separate each tag, put in double quotes, and separate by commas
-#https://stackoverflow.com/questions/32765735/python-enclose-each-word-of-a-space-separated-string-in-quotes
-#set tags. if empty, do nothing, else, fill with tags given by user
-
-if tags == "":
-    pass
-else:
-    tags= ' '.join('#{}'.format(word) for word in tags.split(',')).rstrip(',')
+#
+#'''
+#get arguments from command line to set variables for final output file
+#https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-argument-3-results
+#'''
+#parser = argparse.ArgumentParser()
+#parser.add_argument('-t', help= "Tags (comma separated)")
+#parser.add_argument('-s', help= "Summary notes (paired)?", action='store_true')
+#parser.add_argument('-p', help= "Does this paper have a listing in Papers3?", action='store_true', required = True)
+#
+#args = args = parser.parse_args()
+#tags = args.t
+#print (tags)
+#
+##modify tags -> separate each tag, put in double quotes, and separate by commas
+##https://stackoverflow.com/questions/32765735/python-enclose-each-word-of-a-space-separated-string-in-quotes
+##set tags. if empty, do nothing, else, fill with tags given by user
+#
+#if tags == "":
+#    pass
+#else:
+#    tags= ' '.join('#{}'.format(word) for word in tags.split(',')).rstrip(',')
 
 #%% Run internal scripts 
 
