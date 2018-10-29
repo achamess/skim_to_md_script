@@ -64,7 +64,7 @@ else:
 
 # User needs to set path to bibliography (.bib) file
 path_to_bibliography = "/Users/alex/Dropbox/Papers3_Citations/Bibliography-Master.bib"
-path_to_zk = "/Users/alex/Dropbox/Sublime_Zettel/Paper_Notes/"
+path_to_zk = "/Users/alex/Dropbox/Sublime_Zettel/"
 
 
 #get pdf path from skim 
@@ -109,7 +109,7 @@ timestamp = now.strftime("%Y%m%d%H%M%S")
 
 #make a folder for the notes if it doesn't exist
 #https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format
-directory = path_to_zk + os.path.basename(pdf_path).replace(".pdf","").rstrip('\n')
+directory = path_to_zk 
 if not os.path.exists(directory):
     os.makedirs(directory)
 
