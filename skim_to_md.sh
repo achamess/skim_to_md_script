@@ -88,7 +88,7 @@ paper_info = subprocess.Popen("get_paper.sh",stdout=subprocess.PIPE, shell=True)
 pdf_path = paper_info.split("$#*")[0].strip(' ')
 bibtex_str = paper_info.split("$#*")[1]
 ref = paper_info.split("$#*")[2].strip('\n')
-citekey = "[@"+(paper_info.split("$#*")[3].strip('\n'))+"]"
+citekey = "[#"+(paper_info.split("$#*")[3].strip('\n'))+"]"
 
 #%% Get information about paper from Bibtex record
 
