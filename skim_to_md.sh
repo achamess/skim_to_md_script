@@ -194,7 +194,6 @@ http://cmdlinetips.com/2012/09/three-ways-to-write-text-to-a-file-in-python/
 
 
 files = [f for f in os.listdir(directory)]  
-print(files)
 i = 1
 for key, value in note_dict.items():
     uid = str(str(timestamp) + "." + str(i))
