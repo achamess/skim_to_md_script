@@ -1,4 +1,4 @@
-#! /Users/alex/anaconda/bin/python
+#! /Users/alex/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 
 '''
@@ -156,7 +156,7 @@ notes_split = notes.split("\n\n")
 
 for i in range(len(notes_split)):
     note = notes_split[i]
-    note = re.sub("\-\s","",note) #remove split page hyphens
+    #note = re.sub("\-\s","",note) #remove split page hyphens
     note = re.sub("\* Highlight, page \d+\n","", note)
     note = re.sub("\* Anchored Note, page.*\n","", note)
     notes_split[i] = note
