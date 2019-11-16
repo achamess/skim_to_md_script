@@ -66,3 +66,4 @@ Anyone who does work wtih texts - academics, journalists, writers, researchers, 
 	- Additive extraction: Previously, the script would overwrite any notes that had already been extracted. Now, it looks at the target directory and searches to see if any current notes match any of the current highlights. It does not overwrite them. So now you can return to a PDF and add more highlights at a later point and not overwrite your previous highlights.
 
 
+A line I wrote on my local computer
